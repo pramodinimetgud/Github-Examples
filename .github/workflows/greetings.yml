@@ -7,7 +7,7 @@ on:
 
 jobs:
   first-interaction:
-    if: github.event_name == 'pull_request_target' || github.event_name == 'issues'
+    if: github.event_name == 'pull_request_target' || github.event_name == 'issues' || github.event_name == 'create' 
     runs-on: ubuntu-latest
     permissions:
       issues: write
