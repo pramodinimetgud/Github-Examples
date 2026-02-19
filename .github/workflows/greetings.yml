@@ -1,16 +1,32 @@
 name: Greetings
 
-on: [pull_request_target, issues]
+on:
+  pull_request_target:
+  issues:
+  create:
 
 jobs:
-  greeting:
+  first-interaction:
+    if: github.event_name == 'pull_request_target' || github.event_name == 'issues'
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "Message that will be displayed on users' first issue"
+          pr-message: "Message that will be displayed on users' first pull request"
+
+  branch-greeting:
+    if: github.event_name == 'create' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Greet on branch creation
+        run: |
+          echo "🎉 New branch created!"
+          echo "Branch: ${{ github.event.ref }}"
+          echo "Created by: ${{ github.actor }}"
